@@ -2,7 +2,6 @@
 
 
 import os
-from notion_client import Client
 from datetime import datetime, timedelta
 import requests
 
@@ -22,8 +21,8 @@ from googleapiclient.errors import HttpError
 # See if the item is already in the Google Calendar
 # If not, add it to the Google Calendar
 
-NOTION_TOKEN =  # Add your Notion token
-DATABASE_ID =  # Add your Notion database ID
+NOTION_TOKEN =  # Add your Notion API token here
+DATABASE_ID =  # Add your Notion database ID here
 
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
 
@@ -89,6 +88,18 @@ def create_events(service, notion_tasks, existing_ids):
         # Parse the start time string
         end_time_str = task.date
         end_time = datetime.fromisoformat(end_time_str)
+
+
+         # Convert date string to datetime object
+        date_obj = datetime.strptime(end_time_str, '%Y-%m-%dT%H:%M:%S.%f%z')
+
+        # Get today's date
+        today = datetime.today().date()
+
+        # If the date is in the past, skip this task
+        if date_obj.date() < today:
+            print(f"Event {task.title} is in the past")
+            continue
 
         # Calculate the end time to be an hour later than the start time
         start_time = end_time - timedelta(hours=1)
@@ -174,7 +185,7 @@ def main():
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                'credentials.json', SCOPES)
+                '/Users/imrandiva/Downloads/tests/notion_script/credentials.json', SCOPES)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
         with open('token.json', 'w') as token:
