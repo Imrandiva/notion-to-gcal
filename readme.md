@@ -22,7 +22,7 @@ pip install notion_client google-auth google-auth-oauthlib google-api-python-cli
 
 2. Clone the repo:
 ```bash
-git clone...
+git clone git@github.com:Imrandiva/notion-to-gcal.git
 ```   
 
 ## Usage
